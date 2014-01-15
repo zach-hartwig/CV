@@ -1,0 +1,630 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%% Simple LaTeX CV Template %%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%% Document Setup %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Don't like 10pt? Try 11pt or 12pt
+\documentclass[10pt]{article}
+
+% The automated optical recognition software used to digitize resume
+% information works best with fonts that do not have serifs. This
+% command uses a sans serif font throughout. Uncomment both lines (or at
+% least the second) to restore a Roman font (i.e., a font with serifs).
+%\usepackage{times}
+%\renewcommand{\familydefault}{\sfdefault}
+
+% This is a helpful package that puts math inside length specifications
+\usepackage{calc}
+
+% Layout: Puts the section titles on left side of page
+\reversemarginpar
+
+%
+%         PAPER SIZE, PAGE NUMBER, AND DOCUMENT LAYOUT NOTES:
+%
+% The next \usepackage line changes the layout for CV style section
+% headings as marginal notes. It also sets up the paper size as either
+% letter or A4. By default, letter was used. If A4 paper is desired,
+% comment out the letterpaper lines and uncomment the a4paper lines.
+%
+% As you can see, the margin widths and section title widths can be
+% easily adjusted.
+%
+% ALSO: Notice that the includefoot option can be commented OUT in order
+% to put the PAGE NUMBER *IN* the bottom margin. This will make the
+% effective text area larger.
+%
+% IF YOU WISH TO REMOVE THE ``of LASTPAGE'' next to each page number,
+% see the note about the +LP and -LP lines below. Comment out the +LP
+% and uncomment the -LP.
+%
+% IF YOU WISH TO REMOVE PAGE NUMBERS, be sure that the includefoot line
+% is uncommented and ALSO uncomment the \pagestyle{empty} a few lines
+% below.
+%
+
+%% Use these lines for letter-sized paper
+\usepackage[paper=letterpaper,
+            %includefoot, % Uncomment to put page number above margin
+            marginparwidth=1.0in,     % Length of section titles
+            marginparsep=.05in,       % Space between titles and text
+            margin=0.5in,             % 1 inch margins
+            includemp]{geometry}
+
+%% Use these lines for A4-sized paper
+%\usepackage[paper=a4paper,
+%            %includefoot, % Uncomment to put page number above margin
+%            marginparwidth=30.5mm,    % Length of section titles
+%            marginparsep=1.5mm,       % Space between titles and text
+%            margin=25mm,              % 25mm margins
+%            includemp]{geometry}
+
+%% More layout: Get rid of indenting throughout entire document
+\setlength{\parindent}{0in}
+
+\usepackage[shortlabels]{enumitem}
+
+% Simpler bibsections for CV sections
+% (thanks to natbib for inspiration)
+%
+% * For lists of references with hanging indents and no numbers:
+%
+%   \begin{bibsection}
+%       \item ...
+%   \end{bibsection}
+%
+% * For numbered lists of references (with hanging indents):
+%
+%   \begin{bibenum}
+%       \item ...
+%   \end{bibenum}
+%
+%   Note that bibenum numbers continuously throughout. To reset the
+%   counter, use
+%
+%   \restartlist{bibenum}
+%
+%   at the place where you want the numbering to reset.
+
+\makeatletter
+\newlength{\bibhang}
+\setlength{\bibhang}{1em}
+\newlength{\bibsep}
+ {\@listi \global\bibsep\itemsep \global\advance\bibsep by\parsep}
+\newlist{bibsection}{itemize}{3}
+\setlist[bibsection]{label=,leftmargin=\bibhang,%
+        itemindent=-\bibhang,
+        itemsep=\bibsep,parsep=\z@,partopsep=0pt,
+        topsep=0pt}
+\newlist{bibenum}{enumerate}{3}
+\setlist[bibenum]{label=[\arabic*],resume,leftmargin={\bibhang+\widthof{[999]}},%
+        itemindent=-\bibhang,
+        itemsep=\bibsep,parsep=\z@,partopsep=0pt,
+        topsep=0pt}
+\let\oldendbibenum\endbibenum
+\def\endbibenum{\oldendbibenum\vspace{-.6\baselineskip}}
+\let\oldendbibsection\endbibsection
+\def\endbibsection{\oldendbibsection\vspace{-.6\baselineskip}}
+\makeatother
+
+%% Reference the last page in the page number
+%
+% NOTE: comment the +LP line and uncomment the -LP line to have page
+%       numbers without the ``of ##'' last page reference)
+%
+% NOTE: uncomment the \pagestyle{empty} line to get rid of all page
+%       numbers (make sure includefoot is commented out above)
+%
+\usepackage{fancyhdr,lastpage}
+\pagestyle{fancy}
+%\pagestyle{empty}      % Uncomment this to get rid of page numbers
+\fancyhf{}\renewcommand{\headrulewidth}{0pt}
+\fancyfootoffset{\marginparsep+\marginparwidth}
+\newlength{\footpageshift}
+\setlength{\footpageshift}
+          {0.5\textwidth+0.5\marginparsep+0.5\marginparwidth-2in}
+%\lfoot{\hspace{\footpageshift}%
+%       \parbox{4in}{\, \hfill %
+%                    \arabic{page} of \protect\pageref*{LastPage} % +LP
+%                    \arabic{page}                               % -LP
+%                    \hfill \,}}
+
+% Finally, give us PDF bookmarks
+\usepackage{color,hyperref}
+\definecolor{darkblue}{rgb}{0.0,0.0,0.3}
+\hypersetup{colorlinks,breaklinks,
+            linkcolor=darkblue,urlcolor=darkblue,
+            anchorcolor=darkblue,citecolor=darkblue}
+
+%%%%%%%%%%%%%%%%%%%%%%%% End Document Setup %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%% Helper Commands %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%% HEADING AT TOP OF CURRICULUM VITAE
+
+% The title (name) with a horizontal rule under it
+% (optional argument typesets an object right-justified across from name
+%  as well)
+%
+% Usage: \makeheading{name}
+%        OR
+%        \makeheading[right_object]{name}
+%
+% Place at top of document. It should be the first thing.
+% If ``right_object'' is provided in the square-braced optional
+% argument, it will be right justified on the same line as ``name'' at
+% the top of the CV. For example:
+%
+%       \makeheading[\emph{Curriculum vitae}]{Your Name}
+%
+% will put an emphasized ``Curriculum vitae'' at the top of the document
+% as a title. Likewise, a picture could be included:
+%
+%   \makeheading[\includegraphics[height=1.5in]{my_picutre}]{Your Name}
+%
+% the picture will be flush right across from the name.
+\newcommand{\makeheading}[2][]%
+        {\hspace*{-\marginparsep minus \marginparwidth}%
+         \begin{minipage}[t]{\textwidth+\marginparwidth+\marginparsep}%
+             {\huge \bfseries #2 \hfill #1}\\
+             {\normalsize \url{hartwig@psfc.mit.edu} \hfill +1 314 922 6495 (cell) \hfill +1 617 253 0025 (work) #1}\\
+             {\normalsize 77 Massachusetts Ave, NW17-155, Cambridge MA 02139 \hfill \href{http://www.psfc.mit.edu/~hartwig}{\url{http://www.psfc.mit.edu/$\sim$hartwig}} #1}\\
+             [-0.15\baselineskip]%
+             \rule{\columnwidth}{1pt}%
+         \end{minipage}}
+
+%%% SECTION HEADINGS
+
+% The section headings. Flush left in small caps down pseudo-margin.
+%
+% Usage: \section{section name}
+\renewcommand{\section}[1]{\pagebreak[3]%
+    \vspace{1.3\baselineskip}%
+    \phantomsection\addcontentsline{toc}{section}{#1}%
+    \noindent\llap{\scshape\smash{\parbox[t]{\marginparwidth}{\hyphenpenalty=10000\raggedright #1}}}%
+    \vspace{-\baselineskip}\par}
+
+%%% LISTS
+
+% This macro alters a list by removing some of the space that follows the list
+% (is used by lists below)
+\newcommand*\fixendlist[1]{%
+    \expandafter\let\csname preFixEndListend#1\expandafter\endcsname\csname end#1\endcsname
+    \expandafter\def\csname end#1\endcsname{\csname preFixEndListend#1\endcsname\vspace{-0.6\baselineskip}}}
+
+% These macros help ensure that items in outer-type lists do not get
+% separated from the next line by a page break
+% (they are used by lists below)
+\let\originalItem\item
+\newcommand*\fixouterlist[1]{%
+    \expandafter\let\csname preFixOuterList#1\expandafter\endcsname\csname #1\endcsname
+    \expandafter\def\csname #1\endcsname{\csname preFixOuterList#1\endcsname\let\oldItem\item\def\item{\pagebreak[2]\oldItem}}
+    \expandafter\let\csname preFixOuterListend#1\expandafter\endcsname\csname end#1\endcsname
+    \expandafter\def\csname end#1\endcsname{\let\item\oldItem\csname preFixOuterListend#1\endcsname}}
+\newcommand*\fixinnerlist[1]{%
+    \expandafter\let\csname preFixInnerList#1\expandafter\endcsname\csname #1\endcsname
+    \expandafter\def\csname #1\endcsname{\let\oldItem\item\let\item\originalItem\csname preFixInnerList#1\endcsname}
+    \expandafter\let\csname preFixInnerListend#1\expandafter\endcsname\csname end#1\endcsname
+    \expandafter\def\csname end#1\endcsname{\csname preFixInnerListend#1\endcsname\let\item\oldItem}}
+
+% An itemize-style list with lots of space between items
+%
+% Usage:
+%   \begin{outerlist}
+%       \item ...    % (or \item[] for no bullet)
+%   \end{outerlist}
+\newlist{outerlist}{itemize}{3}
+    \setlist[outerlist]{label=\enskip\textbullet,leftmargin=*}
+    \fixendlist{outerlist}
+    \fixouterlist{outerlist}
+
+% An environment IDENTICAL to outerlist that has better pre-list spacing
+% when used as the first thing in a \section
+%
+% Usage:
+%   \begin{lonelist}
+%       \item ...    % (or \item[] for no bullet)
+%   \end{lonelist}
+\newlist{lonelist}{itemize}{3}
+    \setlist[lonelist]{label=\enskip\textbullet,leftmargin=*,partopsep=0pt,topsep=0pt}
+    \fixendlist{lonelist}
+    \fixouterlist{lonelist}
+
+% An itemize-style list with little space between items
+%
+% Usage:
+%   \begin{innerlist}
+%       \item ...    % (or \item[] for no bullet)
+%   \end{innerlist}
+\newlist{innerlist}{itemize}{3}
+    \setlist[innerlist]{label=\enskip\small\textbullet,leftmargin=*,parsep=0pt,itemsep=0pt,topsep=0pt,partopsep=0pt}
+    \fixinnerlist{innerlist}
+
+% An environment IDENTICAL to innerlist that has better pre-list spacing
+% when used as the first thing in a \section
+%
+% Usage:
+%   \begin{loneinnerlist}
+%       \item ...    % (or \item[] for no bullet)
+%   \end{loneinnerlist}
+\newlist{loneinnerlist}{itemize}{3}
+    \setlist[loneinnerlist]{label=\enskip\textbullet,leftmargin=*,parsep=0pt,itemsep=0pt,topsep=0pt,partopsep=0pt}
+    \fixendlist{loneinnerlist}
+    \fixinnerlist{loneinnerlist}
+
+%%% EXTRA SPACE
+
+% To add some paragraph space between lines.
+% This also tells LaTeX to preferably break a page on one of these gaps
+% if there is a needed pagebreak nearby.
+\newcommand{\blankline}{\quad\pagebreak[3]}
+\newcommand{\halfblankline}{\quad\vspace{-0.5\baselineskip}\pagebreak[3]}
+
+%%% FORMATTING MACROS
+
+% Uses hyperref to link DOI
+\newcommand\doilink[1]{\href{http://dx.doi.org/#1}{#1}}
+\newcommand\doi[1]{doi:\doilink{#1}}
+
+% For \url{SOME_URL}, links SOME_URL to the url SOME_URL
+\providecommand*\url[1]{\href{#1}{#1}}
+% Same as above, but pretty-prints SOME_URL in teletype fixed-width font
+\renewcommand*\url[1]{\href{#1}{\texttt{#1}}}
+
+% For \email{ADDRESS}, links ADDRESS to the url mailto:ADDRESS
+\providecommand*\email[1]{\href{mailto:#1}{#1}}
+% Same as above, but pretty-prints ADDRESS in teletype fixed-width font
+%\renewcommand*\email[1]{\href{mailto:#1}{\texttt{#1}}}
+
+%\providecommand\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+%    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+%\providecommand\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+%    \TeX}}
+\providecommand\BibTeX{{B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+    \TeX}}
+\providecommand\Matlab{\textsc{Matlab}}
+
+% Custom hyphenation rules for words that LaTeX has trouble with
+\hyphenation{bio-mim-ic-ry bio-in-spi-ra-tion re-us-a-ble pro-vid-er}
+
+%%%%%%%%%%%%%%%%%%%%%%%% End Helper Commands %%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%% Begin CV Document %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+\makeheading{Zachary S. Hartwig}
+\vspace{0.1cm}
+
+%%
+%% In modern CV's, it seems like ``Objective'' is frowned upon. Instead,
+%% incorporate it into a well-constructed cover letter. The ``More
+%% information'' can go at the end of the CV, but it should not distract
+%% from the section giving references available to contact.
+%%
+%
+% \section{Objective}
+%
+% Placement in an academic position (i.e., faculty, postdoctoral, or
+% research scientist) that allows for advanced research in distributed
+% complex adaptive systems (i.e., modeling, analysis, design, and
+% verification) with a particular focus on the control of engineered
+% agents (e.g., for communications, control, software, electronics, and
+% sustainability) and the analysis of biological phenomena (e.g.,
+% self-organization, ecological rationality)
+% \begin{innerlist}
+% \item More information and auxiliary documents can be found at\\\url{http://www.tedpavlic.com/facjobsearch/}
+% \end{innerlist}
+
+% \section{Research Interests}
+% \textbf{Applying radiation detection and particle transport simulation
+%   towards solving complex problems in nuclear science and
+%   engineering}: nuclear diagnostics for plasma-wall interactions in
+% magnetic fusion devices; digital data acquisition and pulse
+% processing; advanced particle detectors for special nuclear material
+% security; computational ion beam analysis for materials science; Monte
+% Carlo particle transport development and simulation; compact
+% superconducting cyclotrons for nuclear medicine and security;
+% production of fundamental nuclear data; conceptual engineering designs
+% of magnetic fusion devices.
+
+\newlength{\rcollength}\setlength{\rcollength}{3.0in}%
+\newlength{\spacewidth}\setlength{\spacewidth}{20pt}
+\newcommand\spacechar{$|$}
+
+\section{Research Interests}
+\textbf{Advancing radiation detection and particle transport simulation \\ to solve complex problems in nuclear science and engineering}\\
+
+\begin{tabular}[t]{@{}p{\textwidth-\rcollength-\spacewidth}@{}p{\spacewidth}@{}p{\rcollength}}%
+
+% Address box
+\parbox{\textwidth-\rcollength-\spacewidth}{%
+\begin{innerlist}
+\item Particle detection for nuclear security
+\item Monte Carlo particle transport simulation
+\item Digital data acquisition and pulse processing
+\item Computational ion beam materials analysis
+\end{innerlist}
+
+}
+% Shorten by removing \spacechar's
+& \parbox{\spacewidth}{\centering} &
+
+% Non-snail-mail contact information
+\parbox{\rcollength}{%
+
+\begin{innerlist}
+\item Nuclear diagnostic for magnetic fusion
+\item Production of fundamental nuclear data
+\item Conceptual designs for magnetic fusion
+\item Compact superconducting cyclotrons
+\end{innerlist}
+%\vspace{0.40cm}
+}
+\end{tabular}
+
+\vspace{0.4cm}
+
+\section{Education}
+
+%\newlength{\rcollength}\setlength{\rcollength}{3.0in}%
+%\newlength{\spacewidth}\setlength{\spacewidth}{20pt}
+%\newcommand\spacechar{$|$}
+%
+\begin{tabular}[t]{@{}p{\textwidth-\rcollength-\spacewidth}@{}p{\spacewidth}@{}p{\rcollength}}%
+
+% Address box
+\parbox{\textwidth-\rcollength-\spacewidth}{%
+\textbf{Ph.D. in Nuclear Science}, MIT. September 2013.
+
+\begin{innerlist}
+\item Concentration: Fusion nuclear science
+\item GPA: 4.7 / 5.0
+\item Thesis: \emph{An accelerator-based, in-situ diagnostic for plasma-material interactions science on the Alcator C-Mod tokamak}
+\end{innerlist}
+
+}
+% Shorten by removing \spacechar's
+& \parbox{\spacewidth}{\centering} &
+
+% Non-snail-mail contact information
+\parbox{\rcollength}{%
+\textbf{B.A. in Physics}, \href{http://www.bu.edu}{Boston University}. May 2005.
+\begin{innerlist}
+\item Concentration: Experimental particle physics
+\item GPA: 3.7 / 4.0
+\item Degree awarded \emph{summa cum laude}
+\item Dean's List all 8 semesters
+\end{innerlist}
+\vspace{0.40cm}
+}
+\end{tabular}
+
+\vspace{0.4cm}
+
+\section{Publications}
+\begin{bibenum}
+   \item Z.S. Hartwig, C.B. Haakonsen, R.T. Mumgaard, \emph{et al.} An initial study of demountable, high-temperature superconducting magnets for the Vulcan tokamak conceptual design.
+     \emph{Fusion Engineering and Design}, \textbf{87} (2012) 201-214.
+%     \doi{10.1016/j.fusengdes.2011.10.002}
+
+   \item Z.S. Hartwig and D.G. Whyte. Simulated plasma facing component measurements for an \emph{in-situ} surface diagnostic on
+       Alcator C-Mod. \emph{Review of Scientific Instruments}, \textbf{81} 10E106 (2010).
+%      \doi{10.1063/1.3478634}
+
+   \item Z.S. Hartwig and M. Zucchetti. Neutronics studies for a compact, high-field tokamak neutron source.
+     \emph{Fusion Science and Technology}, \textbf{60} (2011) 725-729.
+
+   \item Z.S Hartwig and Y.A. Podpaly. \emph{The Magnetic Fusion Energy Formulary}. 
+       Independently published. 
+       \\ Available at: \href{http://www.psfc.mit.edu/~hartwig/formulary.shtml}{http://www.psfc.mit.edu/$\sim$hartwig/formulary.shtml}
+
+   \item A. Inglis \emph{et al.}, ``Glass-Panel Li-6 Neutron Detector'', presented at the Technologies for Homeland Security (HST), IEEE International Conference on, Waltham, MA, 2012. 
+       In press. 
+       \\ Available at \href{http://darkmatter.bu.edu/~ainglis/lithium\_Inglis.pdf}{http://darkmatter.bu.edu/$\sim$ainglis/lithium\_Inglis.pdf}
+
+   \item G.M. Olynyk, Z.S. Hartwig, D.G. Whyte, \emph{et al.} Vulcan: A steady-state tokamak for reactor-relevant plasma–material interaction science.
+      \emph{Fusion Engineering and Design}, \textbf{87} (2012) 224-233.
+
+   \item H.S. Barnard, Z.S. Hartwig, G.M. Olynyk, \emph{et al.} Assessing the feasibility of a high-temperature, helium-cooled vacuum vessel and first wall for the Vulcan tokamak conceptual design.
+      \emph{Fusion Engineering and Design}, \textbf{87} (2012) 248-262.
+
+   \item D.G. Whyte, G.M. Olynyk, H.S. Barnard, \emph{et al.} Reactor similarity for plasma–material interactions in scaled-down tokamaks as the basis for the Vulcan conceptual design.
+      \emph{Fusion Engineering and Design}, \textbf{87} (2012) 234-247.
+
+  \item M. Zucchetti, B. Coppy, F. Bombarda, \emph{et al.} Compact tokamak neutron sources as a first step towards hybrid fission-fusion reactors.
+     \emph{Fusion Science and Technology}. In press. 
+     \\ Available at \href{http://www.psfc.mit.edu/~hartwig/public\_download/Zucchetti\_TOFE\_2012\_Final.pdf}{http://www.psfc.mit.edu/$\sim$hartwig/public\_download/TOFE\_2012\_Final.pdf}
+
+   \item D.M. Webber, V. Tishchenko, Q. Peng, \emph{et al.} Measurement of the Positive Muon Lifetime and Determination of the Fermi Constant to Part-per-Million Precision.
+     \emph{Phys. Rev. Lett}, \textbf{106} (2011) 041803.
+
+\end{bibenum}
+
+\section{Notable Achievements}
+\begin{innerlist}
+\item \textit{Recipient}, Boston University Alumni Prize for Excellence in Physics. May 2005.
+\item \textit{Keynote speaker}, MIT Nuclear Science and Engineering Department (NSE) Research Expo. March 2011.
+\item \textit{Recipient}, MIT International Science and Technology Initative Global Seed Fund Grant. May 2011.
+\item \textit{Recipient}, MIT Plasma Science and Fusion Center Award, Science Education and Outreach. July 2012.
+\item \textit{Recipient}, MIT NSE Special Award, Excellence in Science Communication and Policy. May 2012.
+\item \textit{Invitated talk}, Conference on the Application of Accelerators in Research and Industry. August 2012.
+\item \textit{USA Cycling National Champion}, Collegiate Track Division II Team Omnium. September 2012.
+\end{innerlist}
+
+\makeheading{Zachary S. Hartwig}
+\vspace{0.1cm}
+
+\section{Hardware Expertise}
+\textbf{Detector Data Acquisition}
+\begin{innerlist}
+  \item CAEN S.p.A. data acquisition systems, Tektronix digital oscilloscopes
+\end{innerlist}
+
+\halfblankline
+
+\textbf{Particle Detector Construction}
+\begin{innerlist}
+\item Scintillator crystals, photomultiplier tubes, silicon avalanche
+  photodiodes, silicon photomultiplier, signal preamplifiers,
+  soldering, basic machining, detector test platforms
+\end{innerlist}
+
+\section{Computer expertise}
+
+\textbf{Programming Languages}
+\begin{innerlist}
+  \item C, C$+$$+$, Java, Python, Unix shell scripting, GNU make, Matlab, IDL, Open MPI, MPICH2
+\end{innerlist}
+
+\halfblankline
+
+\textbf{Particle Transport and Nuclear Physics Codes}
+\begin{innerlist}
+  \item Geant4, MCNP5/X, DAGMC CAD-based neutronics, SRIM/TRIM, EASY, NJOY, TALYS, EMPIRE
+\end{innerlist}
+
+\halfblankline
+
+\textbf{Data acquisition, storage and analysis}
+\begin{innerlist}
+  \item ROOT, MDSplus
+\end{innerlist}
+
+\halfblankline
+
+\textbf{Computer-Aided Design (CAD) and Analysis}
+\begin{innerlist}
+  \item Solid Edge ST5, CUBIT Tool Suite, COMSOL Multiphysics 4
+\end{innerlist}
+
+\halfblankline
+
+\textbf{Productivity Software}
+\begin{innerlist}
+  \item Windows OS, Linux OS (Fedora, RHEL, Ubuntu), Emacs, Subversion, Git, \LaTeX, LibreOffice, GIMP
+\end{innerlist} 
+
+
+\section{Research Experience}
+\begin{innerlist}
+\item \textbf{Ph.D student, MIT (2007-present)}: Designed and
+  demonstrated an innovative accelerator-based materials diagnostic
+  for magnetic fusion devices. The research involved creating
+  start-of-the-art particle transport simulations, applying advanced
+  radiation detection in a challenging environment, installing a data
+  acquisition system, and creating analysis tools for digital pulse
+  processing of detector data. Project involved significant team work
+  with Alcator C-Mod personnel and mentoring of younger
+  students.\vspace{0.2cm}
+
+\item \textbf{Consultant, Neotron Inc. (2009-2010)}: Played a key role
+  in the development of an innovative lithium-6-based detector for
+  homeland security. The research involved creating high-fidelity
+  models of proposed detector designs using particle transport
+  simulations and working with a team to optimize cost and detection
+  efficiency within the engineering constraints to achieve a final
+  design.\vspace{0.2cm}
+  
+\item \textbf{Consultant, Cyclotron Group, MIT (2010)}: Predicted the
+  deleterious effects of losing control of an accelerated particle
+  beam in a proposed ultracompact superconducting cyclotron
+  facility. The research involved creating and benchmarking a
+  high-fidelity model of the cyclotron and calculating nuclear heating
+  and radiation damage to the superconducting magnets as a result of
+  various accident scenarios.\vspace{0.2cm}
+
+\item \textbf{Research Assistant, Boston University (2004-2006)}:
+  Developed a particle physics simulation for the Muon g-2 Experiment,
+  which searches for physics beyond the Standard Model of particle
+  physics. The simulation is presently used and developed by a
+  world-wide collaboration as the leading computational design tool
+  for the next generation of the experiment that will run at Fermilab
+  National Accelerator Laboratory in 2016. Experimental work on
+  particle detection and data acquisition performed on the M$\mu$LAN
+  experiment to measure the lifetime of the muon at Paul Sherrer
+  Institute, Switzerland, 2005.
+
+\end{innerlist}
+
+\section{Leadership Experience}
+\begin{innerlist}
+\item \textbf{Mediator}: Conflict resolution, MIT Resistance for Easing Friction and Stress Program. January 2010.
+\item \textbf{Organizer}: U.S. fusion student advocacy trip to 30 Congressional offices in Washington DC. June 2012.
+\end{innerlist}
+
+\section{Teaching Experience}
+\begin{innerlist}
+\item \textbf{Private tutor}: High school physics for several Boston University Academy Students. 2005-2006. 
+\item \textbf{Teaching assistant}: 22.105 : Electromagnetic Interactions (Prof. D. Whyte). Fall 2010.
+\item \textbf{Teaching assistant}: 22.63: Engineering Principles for Fusion Reactors (Prof. D. Whyte). Spring 2012.
+\item \textbf{UROP advisor}: Florent Sainct (2009), Jake Jurewicz (2011), Gabriel Ledoux (2012, 2013)
+\item \textbf{Undergraduate thesis mentor}: Lauren Chilton, MIT Class of 2012.
+\end{innerlist}
+
+% \section{Academic Coursework (MIT)}
+
+% \newlength{\rcollengthtwo}\setlength{\rcollengthtwo}{3.1in}%
+
+% \begin{tabular}[t]{@{}p{\textwidth-\rcollengthtwo-\spacewidth}@{}p{\spacewidth}@{}p{\rcollengthtwo}}%
+
+% % Address box
+% \parbox{\textwidth-\rcollengthtwo-\spacewidth}{%
+%   \begin{innerlist}
+%   \item   3.320 Atomistic Computer Materials Modeling
+%   \item  18.085 Computational Science and Engineering
+%   \item  22.071 Electronics, Signals, and Measurement
+%   \item  22.101 Applied Nuclear Physics
+%   \item  22.105 Electromagnetic Interactions
+%   \item  22.106 Neutron Interactions and Applications
+%   \item  22.51 Quantum Theory of Radiation Interactions
+%   \item  22.611 Introduction to Plasmas Physics I
+%   \end{innerlist}
+% }
+
+% & \parbox{\spacewidth}{\centering} &
+
+% % Non-snail-mail contact information
+% \parbox{\rcollengthtwo}{%
+
+% \begin{innerlist}
+% \item  22.612 Introduction to Plasmas Physics II
+% \item  22.62 Fusion Energy
+% \item  22.63 Engineering Principles of Fusion Reactors
+% \item  22.70 Materials for Nuclear Applications
+% \item  22.811 Sustainable Energy
+% \item  22.814 Nuclear Non-Proliferation
+% \item  22.93 Teaching Experience in Nuclear Science
+% \end{innerlist}
+% }
+
+% \end{tabular}
+
+\end{document}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%% End CV Document %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%----------------------------------------------------------------------%
+% The following is copyright and licensing information for
+% redistribution of this LaTeX source code; it also includes a liability
+% statement. If this source code is not being redistributed to others,
+% it may be omitted. It has no effect on the function of the above code.
+%----------------------------------------------------------------------%
+% Copyright (c) 2007, 2008, 2009, 2010, 2011 by Theodore P. Pavlic
+%
+% Unless otherwise expressly stated, this work is licensed under the
+% Creative Commons Attribution-Noncommercial 3.0 United States License. To
+% view a copy of this license, visit
+% http://creativecommons.org/licenses/by-nc/3.0/us/ or send a letter to
+% Creative Commons, 171 Second Street, Suite 300, San Francisco,
+% California, 94105, USA.
+%
+% THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+% OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+% MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+% IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+% CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+% TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+% SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+%----------------------------------------------------------------------%
